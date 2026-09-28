@@ -119,7 +119,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const currentThemeColor = selectedUser?.neonColor || '#00F0FF';
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-5 bg-[#0B0F19] text-white overflow-hidden select-none">
+    <div className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center p-5 bg-[#0B0F19] text-white overflow-y-auto select-none py-8">
       {/* Background Ambient Liquid Blobs */}
       <div
         className="absolute top-1/4 -left-20 w-80 h-80 rounded-full blur-[90px] pointer-events-none transition-colors duration-500 opacity-20"
@@ -128,7 +128,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <div className="absolute bottom-1/4 -right-20 w-80 h-80 rounded-full bg-[#0066FF]/15 blur-[90px] pointer-events-none" />
 
       {/* Main Container */}
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center my-auto py-6">
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center my-auto py-6 bg-white/[0.02] border border-white/10 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-2xl">
         {/* App Logo */}
         <div className="relative mb-3">
           <div className="relative w-18 h-18 rounded-[24px] p-0.5 bg-gradient-to-tr from-[#00F0FF] via-[#FF70A6] to-[#39FF14] shadow-[0_0_30px_rgba(0,240,255,0.35)] flex items-center justify-center">
@@ -206,73 +206,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </span>
           <div className="flex-1 h-px bg-white/10" />
         </div>
-
-        {/* Quick Accounts Carousel / Selector on this device */}
-        {users.length > 0 && (
-          <div className="w-full mb-3">
-            <div className="flex items-center justify-between pl-1 mb-1.5">
-              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Contas no Dispositivo
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  triggerHaptic('light');
-                  onGoToRegister();
-                }}
-                className="text-[10px] text-[#00F0FF] hover:underline flex items-center gap-1 font-semibold"
-              >
-                <UserPlus className="w-3 h-3" />
-                <span>+ Criar Conta</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {users.slice(0, 4).map((u) => {
-                const isSelected = selectedUser?.id === u.id;
-                return (
-                  <button
-                    key={u.id}
-                    type="button"
-                    onClick={() => handleSelectUser(u)}
-                    className={`p-2.5 rounded-2xl flex items-center gap-2 border transition-all text-left relative ${
-                      isSelected
-                        ? 'bg-white/[0.08] border-white/40 shadow-lg'
-                        : 'bg-white/[0.03] border-white/5 hover:border-white/15'
-                    }`}
-                  >
-                    {isSelected && (
-                      <div
-                        className="absolute top-2 right-2 w-3 h-3 rounded-full flex items-center justify-center text-black"
-                        style={{ backgroundColor: u.neonColor }}
-                      >
-                        <Check className="w-2 h-2 stroke-[3]" />
-                      </div>
-                    )}
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 shadow-sm"
-                      style={{
-                        backgroundColor: u.avatarColor,
-                        color: u.neonColor,
-                        border: `2px solid ${u.neonColor}`,
-                      }}
-                    >
-                      {u.avatarInitial}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-xs font-bold text-white truncate">
-                        {u.shortName}
-                      </div>
-                      <div className="text-[9px] text-gray-400 font-mono truncate">
-                        {u.bankName}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         {/* Login Form */}
         <form onSubmit={handleEntrar} className="w-full space-y-3">
