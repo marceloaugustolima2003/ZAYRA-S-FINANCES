@@ -24,8 +24,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 pb-safe pointer-events-none">
-      <div className="relative max-w-md mx-auto px-4 pb-2">
+    <div className="fixed bottom-0 inset-x-0 z-40 pointer-events-none pb-safe">
+      <div className="relative max-w-md mx-auto px-4 pb-6">
         {/* Liquid Glass Dock Container */}
         <nav className="pointer-events-auto relative flex items-center justify-between px-3 py-2.5 rounded-[32px] bg-[#0B0F19]/80 backdrop-blur-2xl border border-white/15 shadow-[0_-10px_35px_rgba(0,0,0,0.7)]">
           {/* Ambient top specular reflection */}

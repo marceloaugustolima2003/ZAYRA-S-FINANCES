@@ -145,7 +145,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       />
 
       {/* Main Scrollable View Area */}
-      <main className="relative z-10 flex-1 max-w-md w-full mx-auto px-4 pt-3 pb-28">
+      <main className="relative z-10 flex-1 max-w-md w-full mx-auto px-4 pt-safe pb-28">
         {/* Offline & Sync Queue Status Banner (PWA Offline-First) */}
         <AnimatePresence>
           {(!isOnline || pendingSyncCount > 0) && (

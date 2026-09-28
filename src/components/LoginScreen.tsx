@@ -291,7 +291,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 onChange={(e) => setEmailInput(e.target.value)}
                 placeholder="seu.email@exemplo.com"
                 required
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-xs backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/30 transition-all shadow-inner"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-base backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/30 transition-all shadow-inner"
               />
             </div>
           </div>
@@ -310,7 +310,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Sua senha de acesso"
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-xs backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/30 transition-all shadow-inner"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-base backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/30 transition-all shadow-inner"
               />
             </div>
           </div>

@@ -263,7 +263,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ex: Gabriela Duarte"
                 required
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-xs backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-base backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
               />
             </div>
           </div>
@@ -283,7 +283,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu.email@exemplo.com"
                 required
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-xs backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-base backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Crie uma senha segura"
                 required
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-xs backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-white placeholder-gray-500 text-base backdrop-blur-xl focus:outline-none focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF]/40 transition-all shadow-inner"
               />
             </div>
           </div>
@@ -378,7 +378,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 value={initialBalance}
                 onChange={(e) => setInitialBalance(e.target.value)}
                 placeholder="0,00"
-                className="w-full px-3 py-2 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#00F0FF]"
+                className="w-full px-3 py-2 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-base font-mono focus:outline-none focus:border-[#00F0FF]"
               />
             </div>
 
@@ -391,7 +391,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 value={monthlySalary}
                 onChange={(e) => setMonthlySalary(e.target.value)}
                 placeholder="4000"
-                className="w-full px-3 py-2 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#00F0FF]"
+                className="w-full px-3 py-2 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-base font-mono focus:outline-none focus:border-[#00F0FF]"
               />
             </div>
           </div>
