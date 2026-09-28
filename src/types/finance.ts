@@ -29,6 +29,29 @@ export interface Transaction {
   date: string;
   cardName: string;
   note?: string;
+  isRecurring?: boolean;
+  recurringId?: string;
+  recurrenceFrequency?: 'monthly' | 'weekly' | 'yearly';
+  recurrenceDay?: number;
+}
+
+export interface RecurringTransaction {
+  id: string;
+  userId: UserId;
+  description: string;
+  amount: number;
+  type: 'expense' | 'income';
+  category: string;
+  categoryIcon: string;
+  categoryColor: string;
+  frequency: 'monthly' | 'weekly' | 'yearly';
+  dayOfMonth: number; // 1 to 31
+  cardName: string;
+  active: boolean;
+  autoPost: boolean; // automatically create entry or ask to confirm
+  createdAt: string;
+  lastProcessedDate?: string;
+  nextDueDate: string;
 }
 
 export interface BudgetGoal {

@@ -3,7 +3,7 @@ import { PWAInstallButton } from './PWAInstallButton';
 import { triggerHaptic } from '../utils/haptics';
 import { UserAccount } from '../types/finance';
 import { ChevronDown, Check, UserPlus, ArrowRightLeft, Sparkles } from 'lucide-react';
-import { getAllUsers } from '../data/mockData';
+import { useFinanceStore } from '../store/useFinanceStore';
 
 interface AppHeaderProps {
   currentUser: UserAccount;
@@ -19,19 +19,24 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onAvatarClick,
 }) => {
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
-  const allUsers = getAllUsers();
-  const otherUsers = allUsers.filter((u) => u.id !== currentUser.id);
+  const { users, viewMode, toggleViewMode, isOnline, pendingSyncCount } = useFinanceStore();
+  const otherUsers = users.filter((u) => u.id !== currentUser.id);
 
   return (
     <header className="sticky top-0 z-30 w-full bg-[#0B0F19]/90 backdrop-blur-2xl border-b border-white/10 px-4 py-3 transition-all">
       <div className="max-w-md mx-auto flex items-center justify-between gap-3">
-        {/* Left: Branding & Dental Flow Monogram */}
+        {/* Left: Branding & Photo Logo with Rounded Borders */}
         <div className="flex items-center gap-2.5">
-          <div className="relative w-9 h-9 rounded-2xl p-0.5 bg-gradient-to-tr from-[#00F0FF] via-[#0066FF] to-[#39FF14] shadow-[0_0_15px_rgba(0,240,255,0.3)] shrink-0 flex items-center justify-center">
-            <div className="w-full h-full rounded-[14px] bg-[#0B0F19] flex items-center justify-center">
-              <span className="font-extrabold text-sm bg-gradient-to-r from-[#00F0FF] to-[#39FF14] bg-clip-text text-transparent">
-                Z
-              </span>
+          <div className="relative w-9 h-9 rounded-2xl p-0.5 bg-gradient-to-tr from-[#00F0FF] via-[#FF70A6] to-[#39FF14] shadow-[0_0_15px_rgba(0,240,255,0.3)] shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="w-full h-full rounded-[14px] bg-[#0B0F19] flex items-center justify-center overflow-hidden">
+              <img
+                src="/zayra-logo.png"
+                alt="Zayra Logo"
+                className="w-full h-full object-cover rounded-[14px]"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
             </div>
           </div>
           <div>
@@ -42,12 +47,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <span
                 className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full font-mono border"
                 style={{
-                  backgroundColor: `${currentUser.neonColor}15`,
-                  color: currentUser.neonColor,
-                  borderColor: `${currentUser.neonColor}30`,
+                  backgroundColor: `${viewMode === 'couple' ? '#FF70A6' : currentUser.neonColor}15`,
+                  color: viewMode === 'couple' ? '#FF70A6' : currentUser.neonColor,
+                  borderColor: `${viewMode === 'couple' ? '#FF70A6' : currentUser.neonColor}30`,
                 }}
               >
-                Individual
+                {viewMode === 'couple' ? 'Casal' : 'Individual'}
               </span>
             </div>
             <p className="text-[10px] text-gray-400 font-medium">
@@ -109,7 +114,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 <div className="absolute right-0 top-11 z-50 w-64 rounded-3xl bg-[#0F1626]/95 border border-white/15 p-2.5 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(0,240,255,0.15)] animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 flex items-center justify-between">
                     <span>Contas neste Dispositivo</span>
-                    <span className="font-mono text-gray-500">{allUsers.length}</span>
+                    <span className="font-mono text-gray-500">{users.length}</span>
                   </div>
 
                   {/* Active Account Item */}

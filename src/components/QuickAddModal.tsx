@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Check, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { X, Check, ArrowDownLeft, ArrowUpRight, Repeat } from 'lucide-react';
 import { Numpad } from './Numpad';
 import { UserAccount, Transaction } from '../types/finance';
+import { useFinanceStore } from '../store/useFinanceStore';
 import { triggerHaptic } from '../utils/haptics';
 
 interface CategoryOption {
@@ -43,10 +44,16 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   currentUser,
   onAddTransaction,
 }) => {
+  const { addRecurringTransaction } = useFinanceStore();
   const [cents, setCents] = useState<number>(0);
   const [txType, setTxType] = useState<'expense' | 'income'>('expense');
   const [selectedCategory, setSelectedCategory] = useState<CategoryOption>(EXPENSE_CATEGORIES[0]);
   const [description, setDescription] = useState<string>('');
+  const [isRecurring, setIsRecurring] = useState<boolean>(false);
+  const [recurrenceDay, setRecurrenceDay] = useState<number>(() => {
+    const today = new Date().getDate();
+    return today <= 28 ? today : 5;
+  });
 
   if (!isOpen) return null;
 
@@ -82,22 +89,51 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
 
     triggerHaptic('success');
     const amount = cents / 100;
+    const finalDesc = description.trim() || selectedCategory.name;
 
+    // 1. Post transaction for current month
     onAddTransaction({
       userId: currentUser.id,
-      description: description.trim() || selectedCategory.name,
+      description: isRecurring ? `${finalDesc} (Recorrente)` : finalDesc,
       amount,
       type: txType,
       category: selectedCategory.name,
       categoryIcon: selectedCategory.icon,
       categoryColor: selectedCategory.color,
-      date: 'Hoje',
+      date: isRecurring ? `Dia ${recurrenceDay}` : 'Hoje',
       cardName: currentUser.primaryCard,
+      isRecurring,
+      recurrenceDay: isRecurring ? recurrenceDay : undefined,
+      recurrenceFrequency: isRecurring ? 'monthly' : undefined,
     });
+
+    // 2. If recurring, schedule into recurringTransactions
+    if (isRecurring) {
+      const now = new Date();
+      const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, recurrenceDay);
+
+      addRecurringTransaction({
+        userId: currentUser.id,
+        description: finalDesc,
+        amount,
+        type: txType,
+        category: selectedCategory.name,
+        categoryIcon: selectedCategory.icon,
+        categoryColor: selectedCategory.color,
+        frequency: 'monthly',
+        dayOfMonth: recurrenceDay,
+        cardName: currentUser.primaryCard,
+        active: true,
+        autoPost: true,
+        lastProcessedDate: now.toISOString().split('T')[0],
+        nextDueDate: nextMonth.toISOString().split('T')[0],
+      });
+    }
 
     // Reset & Close
     setCents(0);
     setDescription('');
+    setIsRecurring(false);
     onClose();
   };
 
@@ -231,6 +267,55 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               </button>
             );
           })}
+        </div>
+
+        {/* Recurrence Toggle Switch */}
+        <div className="px-1 py-1">
+          <div className="p-2 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => {
+                triggerHaptic('light');
+                setIsRecurring(!isRecurring);
+              }}
+              className="flex items-center gap-2 cursor-pointer text-left"
+            >
+              <div
+                className={`w-6 h-6 rounded-lg flex items-center justify-center transition ${
+                  isRecurring
+                    ? 'bg-[#00F0FF]/25 text-[#00F0FF] border border-[#00F0FF]/40 shadow-[0_0_10px_rgba(0,240,255,0.3)]'
+                    : 'bg-white/5 text-gray-400 border border-white/10'
+                }`}
+              >
+                <Repeat className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-gray-200 block">
+                  Lançamento Recorrente
+                </span>
+                <span className="text-[10px] text-gray-400">
+                  {isRecurring ? 'Agendar mensalmente' : 'Lançamento único'}
+                </span>
+              </div>
+            </button>
+
+            {isRecurring && (
+              <div className="flex items-center gap-1.5 text-xs text-gray-300">
+                <span className="text-[10px] text-gray-400">Todo dia</span>
+                <select
+                  value={recurrenceDay}
+                  onChange={(e) => setRecurrenceDay(Number(e.target.value))}
+                  className="bg-[#0E1526] border border-white/20 text-[#00F0FF] font-mono font-bold rounded-lg px-2 py-0.5 text-xs focus:outline-none focus:border-[#00F0FF]"
+                >
+                  {[1, 5, 10, 15, 20, 25, 28].map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 4. Thumb-Optimized Numpad */}

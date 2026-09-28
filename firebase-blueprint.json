@@ -1,0 +1,124 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Perfil de usuário bancário e membro do casal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "shortName": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "format": "email", "maxLength": 120 },
+        "avatarColor": { "type": "string", "maxLength": 30 },
+        "neonColor": { "type": "string", "maxLength": 30 },
+        "avatarInitial": { "type": "string", "maxLength": 5 },
+        "bankName": { "type": "string", "maxLength": 60 },
+        "primaryCard": { "type": "string", "maxLength": 80 },
+        "accountNumber": { "type": "string", "maxLength": 50 },
+        "monthlySalary": { "type": "number" },
+        "initialBalance": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "name", "email"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Transação financeira de receita ou despesa individual ou do casal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 150 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "category": { "type": "string", "maxLength": 60 },
+        "categoryIcon": { "type": "string", "maxLength": 30 },
+        "categoryColor": { "type": "string", "maxLength": 30 },
+        "date": { "type": "string", "maxLength": 50 },
+        "cardName": { "type": "string", "maxLength": 80 },
+        "note": { "type": "string", "maxLength": 300 },
+        "isRecurring": { "type": "boolean" },
+        "recurringId": { "type": "string", "maxLength": 128 },
+        "recurrenceFrequency": { "type": "string", "maxLength": 30 },
+        "recurrenceDay": { "type": "number" }
+      },
+      "required": ["id", "userId", "description", "amount", "type", "category"]
+    },
+    "BudgetGoal": {
+      "title": "BudgetGoal",
+      "description": "Meta ou limite de orçamento categorizado",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 80 },
+        "spent": { "type": "number" },
+        "limit": { "type": "number" },
+        "percentage": { "type": "number" },
+        "color": { "type": "string", "maxLength": 30 },
+        "glowColor": { "type": "string", "maxLength": 60 },
+        "icon": { "type": "string", "maxLength": 20 }
+      },
+      "required": ["id", "userId", "title", "limit"]
+    },
+    "RecurringTransaction": {
+      "title": "RecurringTransaction",
+      "description": "Agendamento de despesa ou receita recorrente mensal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 120 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "category": { "type": "string", "maxLength": 60 },
+        "categoryIcon": { "type": "string", "maxLength": 30 },
+        "categoryColor": { "type": "string", "maxLength": 30 },
+        "frequency": { "type": "string", "enum": ["monthly", "weekly", "yearly"] },
+        "dayOfMonth": { "type": "number" },
+        "cardName": { "type": "string", "maxLength": 80 },
+        "active": { "type": "boolean" },
+        "autoPost": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "lastProcessedDate": { "type": "string", "maxLength": 50 },
+        "nextDueDate": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "description", "amount", "dayOfMonth"]
+    },
+    "CoupleInvite": {
+      "title": "CoupleInvite",
+      "description": "Convite de vínculo para casal via e-mail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "inviterId": { "type": "string", "maxLength": 128 },
+        "partnerEmail": { "type": "string", "format": "email", "maxLength": 120 },
+        "status": { "type": "string", "enum": ["pending", "accepted", "declined"] },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "inviterId", "partnerEmail", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccount" },
+      "description": "Coleção de perfis de contas de usuários do app"
+    },
+    "/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Coleção global de movimentações e lançamentos financeiros"
+    },
+    "/goals/{goalId}": {
+      "schema": { "$ref": "#/entities/BudgetGoal" },
+      "description": "Metas de orçamento por categoria e usuário"
+    },
+    "/recurring/{recurringId}": {
+      "schema": { "$ref": "#/entities/RecurringTransaction" },
+      "description": "Agendamentos recorrentes e assinaturas mensais ativas"
+    },
+    "/invites/{inviteId}": {
+      "schema": { "$ref": "#/entities/CoupleInvite" },
+      "description": "Convites de casal pendentes e aceitos"
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { GlassCard } from './GlassCard';
+import { CoupleInviteCard } from './CoupleInviteCard';
 import { PWAInstallButton } from './PWAInstallButton';
 import { triggerHaptic } from '../utils/haptics';
 import { UserAccount } from '../types/finance';
-import { getAllUsers, updateUserAccount, deleteUserAccount } from '../data/mockData';
+import { useFinanceStore } from '../store/useFinanceStore';
 import {
   CreditCard,
   Shield,
@@ -16,6 +17,8 @@ import {
   Trash2,
   Check,
   Palette,
+  Database,
+  RefreshCw,
 } from 'lucide-react';
 
 interface ProfileViewProps {
@@ -40,21 +43,20 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onOpenRegister,
   onLogout,
 }) => {
-  const allUsers = getAllUsers();
-  const otherUsers = allUsers.filter((u) => u.id !== currentUser.id);
+  const { users, registerUser, pendingSyncCount, syncPendingQueue, isSyncing, isOnline } = useFinanceStore();
+  const otherUsers = users.filter((u) => u.id !== currentUser.id);
 
   const handleColorChange = (newColor: string) => {
     triggerHaptic('light');
-    updateUserAccount({
+    registerUser({
       ...currentUser,
       neonColor: newColor,
     });
   };
 
   const handleDeleteCurrentAccount = () => {
-    if (confirm('Tem certeza que deseja remover esta conta deste dispositivo?')) {
+    if (confirm('Tem certeza que deseja desconectar esta conta deste dispositivo?')) {
       triggerHaptic('heavy');
-      deleteUserAccount(currentUser.id);
       onLogout();
     }
   };
@@ -117,6 +119,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           </div>
         </div>
       </GlassCard>
+
+      {/* Recurso de Finanças do Casal / Convite por E-mail */}
+      <CoupleInviteCard currentUser={currentUser} />
 
       {/* Dados Bancários e Cartão da Conta */}
       <div className="space-y-2">
@@ -242,6 +247,62 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </GlassCard>
       </div>
 
+      {/* Nuvem, Express API & IndexedDB */}
+      <div className="space-y-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 px-1">
+          Arquitetura de Dados & Offline
+        </h3>
+        <GlassCard className="p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#00F0FF]/15 border border-[#00F0FF]/30 flex items-center justify-center text-[#00F0FF]">
+                <Database className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-white">Firebase Firestore Cloud DB</div>
+                <div className="text-xs text-gray-400">Persistência em nuvem com cache IndexedDB</div>
+              </div>
+            </div>
+            <span
+              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${
+                isOnline
+                  ? 'bg-[#00F0FF]/15 text-[#00F0FF] border-[#00F0FF]/30'
+                  : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isOnline ? 'bg-[#00F0FF] animate-pulse' : 'bg-amber-400'
+                }`}
+              />
+              {isOnline ? 'FIRESTORE ATIVO' : 'OFFLINE (IDB)'}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-white/5 text-xs text-gray-400">
+            <span>Fila de sincronização (Sync Queue)</span>
+            <span className="text-white font-mono font-bold">
+              {pendingSyncCount > 0 ? `${pendingSyncCount} pendente(s)` : 'Tudo sincronizado'}
+            </span>
+          </div>
+
+          {pendingSyncCount > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                triggerHaptic('medium');
+                syncPendingQueue();
+              }}
+              disabled={isSyncing || !isOnline}
+              className="w-full mt-2 py-2 rounded-xl bg-gradient-to-r from-[#00F0FF] to-[#0088FF] text-black font-bold text-xs flex items-center justify-center gap-2 active:scale-98 transition disabled:opacity-50 cursor-pointer"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'Sincronizando fila...' : 'Sincronizar Fila com Servidor'}</span>
+            </button>
+          )}
+        </GlassCard>
+      </div>
+
       {/* Aplicativo PWA */}
       <div className="space-y-2">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 px-1">
@@ -285,7 +346,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <span>Sair da Conta de {currentUser.shortName}</span>
         </button>
 
-        {allUsers.length > 1 && (
+        {users.length > 1 && (
           <button
             onClick={handleDeleteCurrentAccount}
             className="w-full py-2.5 rounded-2xl text-gray-500 hover:text-red-400 text-xs flex items-center justify-center gap-1.5 transition"

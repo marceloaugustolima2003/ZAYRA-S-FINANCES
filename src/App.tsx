@@ -3,10 +3,19 @@ import { Dashboard } from './components/Dashboard';
 import { LoginScreen } from './components/LoginScreen';
 import { RegisterScreen } from './components/RegisterScreen';
 import { UserAccount } from './types/finance';
-import { getActiveUserId, setActiveUserId, clearActiveUserId, getUserById } from './data/mockData';
+import { useFinanceStore } from './store/useFinanceStore';
 
 export default function App() {
-  const [currentUserId, setCurrentUserId] = useState<string | null>(() => getActiveUserId());
+  const {
+    currentUser,
+    users,
+    initStore,
+    switchUser,
+    loginUser,
+    logoutUser: storeLogout,
+    registerUser,
+  } = useFinanceStore();
+
   const [authView, setAuthView] = useState<'login' | 'register'>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
@@ -23,10 +32,20 @@ export default function App() {
       if (path === '/login' || hash === '#login' || path === '/register' || hash === '#register') {
         return false;
       }
+      return !!localStorage.getItem('zayras_active_user_id');
     }
-    const initialId = getActiveUserId();
-    return !!initialId && !!getUserById(initialId);
+    return false;
   });
+
+  // Initialize Zustand Store and IndexedDB on app launch
+  useEffect(() => {
+    initStore().then(() => {
+      const activeId = localStorage.getItem('zayras_active_user_id');
+      if (activeId) {
+        setIsAuthenticated(true);
+      }
+    });
+  }, [initStore]);
 
   // Handle URL hash and popstate navigation
   useEffect(() => {
@@ -41,8 +60,8 @@ export default function App() {
         setIsAuthenticated(false);
         setAuthView('login');
       } else {
-        const id = getActiveUserId();
-        if (id && getUserById(id)) {
+        const id = localStorage.getItem('zayras_active_user_id');
+        if (id) {
           setIsAuthenticated(true);
         }
       }
@@ -57,17 +76,15 @@ export default function App() {
   }, []);
 
   const handleLoginSuccess = (user: UserAccount) => {
-    setCurrentUserId(user.id);
-    setActiveUserId(user.id);
+    loginUser(user);
     setIsAuthenticated(true);
     if (window.location.hash === '#login' || window.location.hash === '#register') {
       window.history.pushState(null, '', window.location.pathname);
     }
   };
 
-  const handleRegisterSuccess = (newUser: UserAccount) => {
-    setCurrentUserId(newUser.id);
-    setActiveUserId(newUser.id);
+  const handleRegisterSuccess = async (newUser: UserAccount) => {
+    await registerUser(newUser);
     setIsAuthenticated(true);
     if (window.location.hash === '#register' || window.location.hash === '#login') {
       window.history.pushState(null, '', window.location.pathname);
@@ -75,8 +92,7 @@ export default function App() {
   };
 
   const handleSwitchUser = (userId: string) => {
-    setCurrentUserId(userId);
-    setActiveUserId(userId);
+    switchUser(userId);
   };
 
   const handleOpenRegister = () => {
@@ -92,12 +108,13 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    clearActiveUserId();
-    setCurrentUserId(null);
+    storeLogout();
     setIsAuthenticated(false);
     setAuthView('login');
     window.location.hash = 'login';
   };
+
+  const currentUserId = currentUser?.id || localStorage.getItem('zayras_active_user_id') || 'user_marcelo';
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-white">
