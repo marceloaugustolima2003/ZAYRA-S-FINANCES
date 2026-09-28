@@ -701,7 +701,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
 
   logoutUser: () => {
     localStorage.removeItem('zayras_active_user_id');
-    set({ currentUser: null });
+    set({ currentUser: null, users: [], partnerUser: null });
   },
 
   dismissError: () => set({ error: null }),

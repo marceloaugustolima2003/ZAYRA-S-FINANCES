@@ -44,7 +44,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onLogout,
 }) => {
   const { users, registerUser, pendingSyncCount, syncPendingQueue, isSyncing, isOnline } = useFinanceStore();
-  const otherUsers = users.filter((u) => u.id !== currentUser.id);
 
   const handleColorChange = (newColor: string) => {
     triggerHaptic('light');
@@ -186,67 +185,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </GlassCard>
       </div>
 
-      {/* Outras Contas Cadastradas neste Dispositivo */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-            Contas neste Dispositivo
-          </h3>
-          <button
-            onClick={() => {
-              triggerHaptic('light');
-              onOpenRegister();
-            }}
-            className="text-xs text-[#00F0FF] hover:underline flex items-center gap-1 font-semibold"
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-            <span>+ Criar Nova Conta</span>
-          </button>
-        </div>
-
-        <GlassCard className="p-3 space-y-2">
-          {otherUsers.length === 0 ? (
-            <p className="text-xs text-gray-400 py-2 text-center">
-              Nenhuma outra conta cadastrada. Você pode criar novas contas a qualquer momento.
-            </p>
-          ) : (
-            otherUsers.map((u) => (
-              <div
-                key={u.id}
-                className="flex items-center justify-between p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 transition"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                    style={{
-                      backgroundColor: u.avatarColor,
-                      color: u.neonColor,
-                      border: `2px solid ${u.neonColor}`,
-                    }}
-                  >
-                    {u.avatarInitial}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-white truncate">{u.name}</div>
-                    <div className="text-[10px] text-gray-400 font-mono truncate">{u.bankName}</div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    triggerHaptic('medium');
-                    onSwitchUser(u.id);
-                  }}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30 active:scale-95 transition"
-                >
-                  Entrar
-                </button>
-              </div>
-            ))
-          )}
-        </GlassCard>
-      </div>
-
       {/* Nuvem, Express API & IndexedDB */}
       <div className="space-y-2">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 px-1">
@@ -346,15 +284,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <span>Sair da Conta de {currentUser.shortName}</span>
         </button>
 
-        {users.length > 1 && (
-          <button
-            onClick={handleDeleteCurrentAccount}
-            className="w-full py-2.5 rounded-2xl text-gray-500 hover:text-red-400 text-xs flex items-center justify-center gap-1.5 transition"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Remover esta conta deste dispositivo</span>
-          </button>
-        )}
       </div>
     </div>
   );
