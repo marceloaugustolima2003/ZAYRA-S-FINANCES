@@ -1,0 +1,7 @@
+{
+  "name": "Zayra's Finance - Controle Financeiro Pessoal",
+  "description": "PWA de controle financeiro pessoal e escalável com estética liquid glass dark mode, contas individuais, metas e extratos em tempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

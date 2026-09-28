@@ -1,0 +1,180 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'>
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id='bgGlow' cx='50%' cy='45%' r='65%'>
+      <stop offset='0%' stop-color='#1A2234'/>
+      <stop offset='60%' stop-color='#0E1524'/>
+      <stop offset='100%' stop-color='#0B0F19'/>
+    </radialGradient>
+
+    <!-- Neon Rim Gradient -->
+    <linearGradient id='neonRim' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#00F0FF'/>
+      <stop offset='30%' stop-color='#FF70A6'/>
+      <stop offset='70%' stop-color='#FFB5D5'/>
+      <stop offset='100%' stop-color='#39FF14'/>
+    </linearGradient>
+
+    <!-- Pink Fleece Gradient -->
+    <linearGradient id='pinkFleece' x1='0%' y1='0%' x2='0%' y2='100%'>
+      <stop offset='0%' stop-color='#FFB2D6'/>
+      <stop offset='50%' stop-color='#F88EB9'/>
+      <stop offset='100%' stop-color='#E06C9B'/>
+    </linearGradient>
+
+    <!-- Inner Ear Pink -->
+    <linearGradient id='innerEar' x1='0%' y1='0%' x2='0%' y2='100%'>
+      <stop offset='0%' stop-color='#FFD1E6'/>
+      <stop offset='100%' stop-color='#F897BE'/>
+    </linearGradient>
+
+    <!-- Eye Gloss -->
+    <radialGradient id='eyeGloss' cx='35%' cy='35%' r='50%'>
+      <stop offset='0%' stop-color='#3A2820'/>
+      <stop offset='40%' stop-color='#18110D'/>
+      <stop offset='100%' stop-color='#080504'/>
+    </radialGradient>
+
+    <!-- Nose Gloss -->
+    <radialGradient id='noseGloss' cx='40%' cy='30%' r='60%'>
+      <stop offset='0%' stop-color='#333338'/>
+      <stop offset='50%' stop-color='#16161A'/>
+      <stop offset='100%' stop-color='#09090C'/>
+    </radialGradient>
+
+    <!-- Fur Soft Glow -->
+    <filter id='softGlow' x='-10%' y='-10%' width='120%' height='120%'>
+      <feDropShadow dx='0' dy='8' stdDeviation='10' flood-color='#000000' flood-opacity='0.4'/>
+    </filter>
+
+    <filter id='neonGlow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feGaussianBlur stdDeviation='12' result='blur'/>
+      <feMerge>
+        <feMergeNode in='blur'/>
+        <feMergeNode in='SourceGraphic'/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Squircle Rounded Base (iOS / Liquid Glass standard) -->
+  <rect width='512' height='512' rx='112' fill='url(#bgGlow)'/>
+  
+  <!-- Outer Glow Ring -->
+  <rect width='506' height='506' x='3' y='3' rx='110' fill='none' stroke='url(#neonRim)' stroke-width='4' opacity='0.85'/>
+
+  <!-- Ambient Light Orbs -->
+  <circle cx='130' cy='140' r='90' fill='#FF70A6' opacity='0.15' filter='url(#neonGlow)'/>
+  <circle cx='380' cy='180' r='80' fill='#00F0FF' opacity='0.12' filter='url(#neonGlow)'/>
+
+  <!-- ================= DOG BODY (PINK FLEECE) ================= -->
+  <path d='M 120 440 C 120 360, 180 320, 256 320 C 332 320, 392 360, 392 440 C 392 480, 120 480, 120 440 Z' 
+        fill='url(#pinkFleece)' filter='url(#softGlow)'/>
+
+  <!-- White Chest / Neck collar fluff peeking out -->
+  <path d='M 215 320 C 235 345, 277 345, 297 320 Z' fill='#FFFFFF'/>
+
+  <!-- Paws (Soft white fluffy paws resting forward) -->
+  <ellipse cx='195' cy='430' rx='28' ry='18' fill='#FFFFFF' filter='url(#softGlow)'/>
+  <ellipse cx='317' cy='430' rx='28' ry='18' fill='#FFFFFF' filter='url(#softGlow)'/>
+  <!-- Toe divisions -->
+  <path d='M 186 426 C 186 438, 188 440, 188 440' stroke='#E2E8F0' stroke-width='2'/>
+  <path d='M 198 426 C 198 438, 200 440, 200 440' stroke='#E2E8F0' stroke-width='2'/>
+  <path d='M 308 426 C 308 438, 310 440, 310 440' stroke='#E2E8F0' stroke-width='2'/>
+  <path d='M 320 426 C 320 438, 322 440, 322 440' stroke='#E2E8F0' stroke-width='2'/>
+
+  <!-- ================= BUNNY EARS ================= -->
+  <!-- Left Ear Base & Inner Ear -->
+  <g transform='rotate(-18 190 140)'>
+    <path d='M 160 170 C 140 100, 155 40, 195 40 C 235 40, 235 100, 215 170 Z' fill='url(#pinkFleece)' filter='url(#softGlow)'/>
+    <path d='M 172 160 C 158 105, 170 60, 195 60 C 220 60, 222 105, 208 160 Z' fill='url(#innerEar)'/>
+  </g>
+
+  <!-- Right Ear Base & Inner Ear -->
+  <g transform='rotate(18 322 140)'>
+    <path d='M 295 170 C 275 100, 275 40, 315 40 C 355 40, 370 100, 350 170 Z' fill='url(#pinkFleece)' filter='url(#softGlow)'/>
+    <path d='M 303 160 C 288 105, 290 60, 315 60 C 340 60, 352 105, 338 160 Z' fill='url(#innerEar)'/>
+  </g>
+
+  <!-- ================= HOOD & SHARK/MONSTER TEETH ================= -->
+  <!-- Main Hood Outer Structure -->
+  <ellipse cx='256' cy='225' rx='138' ry='125' fill='url(#pinkFleece)' filter='url(#softGlow)'/>
+
+  <!-- Hood Face Cutout Border with Jagged Teeth -->
+  <ellipse cx='256' cy='238' rx='98' ry='88' fill='#151B28'/>
+
+  <!-- White Triangular Teeth Trim around face opening -->
+  <!-- Top Teeth -->
+  <polygon points='168,188 184,180 176,206' fill='#FFFFFF'/>
+  <polygon points='184,180 206,172 196,208' fill='#FFFFFF'/>
+  <polygon points='206,172 232,168 220,210' fill='#FFFFFF'/>
+  <polygon points='232,168 260,166 248,212' fill='#FFFFFF'/>
+  <polygon points='260,166 288,168 276,212' fill='#FFFFFF'/>
+  <polygon points='288,168 314,172 302,210' fill='#FFFFFF'/>
+  <polygon points='314,172 336,180 324,208' fill='#FFFFFF'/>
+  <polygon points='336,180 352,188 342,206' fill='#FFFFFF'/>
+
+  <!-- Side Teeth Flaps (Characteristic costume ears/flaps from photo) -->
+  <polygon points='158,225 125,245 158,255' fill='#FFFFFF' opacity='0.95'/>
+  <polygon points='354,225 387,245 354,255' fill='#FFFFFF' opacity='0.95'/>
+
+  <!-- ================= DOG FACE (WHITE POMERANIAN / SPITZ) ================= -->
+  <!-- White fluffy face base -->
+  <ellipse cx='256' cy='245' rx='84' ry='72' fill='#FFFFFF' filter='url(#softGlow)'/>
+  <!-- Soft cream fur shading around muzzle -->
+  <ellipse cx='256' cy='258' rx='56' ry='44' fill='#FFFDF8'/>
+  <ellipse cx='256' cy='272' rx='42' ry='32' fill='#FAF7F2'/>
+
+  <!-- Cute fluffy cheek tufts -->
+  <path d='M 172 245 C 160 252, 164 265, 178 268 C 168 274, 175 284, 190 282' fill='#FFFFFF'/>
+  <path d='M 340 245 C 352 252, 348 265, 334 268 C 344 274, 337 284, 322 282' fill='#FFFFFF'/>
+
+  <!-- ================= EYES ================= -->
+  <!-- Left Eye -->
+  <g>
+    <!-- Eye Socket shadow -->
+    <ellipse cx='215' cy='228' rx='18' ry='19' fill='url(#eyeGloss)' filter='url(#softGlow)'/>
+    <!-- Iris edge -->
+    <circle cx='215' cy='228' r='16' fill='#0C0A09'/>
+    <!-- Specular catchlight reflections (life in the eyes) -->
+    <circle cx='211' cy='223' r='5' fill='#FFFFFF'/>
+    <circle cx='220' cy='233' r='2.5' fill='#FFFFFF' opacity='0.8'/>
+  </g>
+
+  <!-- Right Eye -->
+  <g>
+    <!-- Eye Socket shadow -->
+    <ellipse cx='297' cy='228' rx='18' ry='19' fill='url(#eyeGloss)' filter='url(#softGlow)'/>
+    <!-- Iris edge -->
+    <circle cx='297' cy='228' r='16' fill='#0C0A09'/>
+    <!-- Specular catchlight reflections -->
+    <circle cx='293' cy='223' r='5' fill='#FFFFFF'/>
+    <circle cx='302' cy='233' r='2.5' fill='#FFFFFF' opacity='0.8'/>
+  </g>
+
+  <!-- ================= NOSE & SNOUT ================= -->
+  <!-- Snout shadow -->
+  <ellipse cx='256' cy='274' rx='24' ry='18' fill='#F5EBE6' opacity='0.6'/>
+
+  <!-- Black Button Nose -->
+  <path d='M 244 265 C 244 261, 268 261, 268 265 C 268 272, 258 276, 256 276 C 254 276, 244 272, 244 265 Z' 
+        fill='url(#noseGloss)' filter='url(#softGlow)'/>
+  <!-- Nostrils -->
+  <ellipse cx='250' cy='269' rx='2.5' ry='2' fill='#050507'/>
+  <ellipse cx='262' cy='269' rx='2.5' ry='2' fill='#050507'/>
+  <!-- Nose shine -->
+  <ellipse cx='254' cy='264' rx='4' ry='1.5' fill='#FFFFFF' opacity='0.4'/>
+
+  <!-- Mouth line -->
+  <path d='M 256 276 L 256 283' stroke='#4A3B32' stroke-width='2' stroke-linecap='round'/>
+  <path d='M 248 283 C 252 286, 256 286, 256 283 C 256 286, 260 286, 264 283' 
+        fill='none' stroke='#4A3B32' stroke-width='2' stroke-linecap='round'/>
+
+  <!-- Delicate Whisker Dots -->
+  <circle cx='238' cy='276' r='1.5' fill='#B0A8A0'/>
+  <circle cx='234' cy='280' r='1.5' fill='#B0A8A0'/>
+  <circle cx='274' cy='276' r='1.5' fill='#B0A8A0'/>
+  <circle cx='278' cy='280' r='1.5' fill='#B0A8A0'/>
+
+  <!-- Top Glass Highlight Specular Curve -->
+  <path d='M 30 110 C 120 40, 392 40, 482 110' fill='none' stroke='#FFFFFF' stroke-width='2' opacity='0.25'/>
+</svg>
