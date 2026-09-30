@@ -1,7 +1,6 @@
 {
-  "name": "Zayra's Finance - Controle Financeiro Pessoal",
-  "description": "PWA de controle financeiro pessoal e escalável com estética liquid glass dark mode, contas individuais, metas e extratos em tempo real.",
+  "name": "Zayra's Finance - Aura Wealth",
+  "description": "Aplicativo premium de finanças pessoais e gestão de patrimônio com design liquid glassmorphism, Open Finance, controle por categorias e metas financeiras.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
-

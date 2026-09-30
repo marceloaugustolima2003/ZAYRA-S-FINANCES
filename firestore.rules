@@ -1,46 +1,104 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Reusable helper functions
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
     function isValidId(id) {
-      return id is string && id.size() <= 128;
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    // Health check test connection endpoint
-    match /test/{docId} {
-      allow read: if true;
+    function incoming() {
+      return request.resource.data;
     }
 
-    // Users Collection
+    function existing() {
+      return resource.data;
+    }
+
+    // Connection test doc
+    match /test/{testId} {
+      allow get: if true;
+    }
+
+    // User profiles
     match /users/{userId} {
-      allow read: if true;
-      allow create, update: if isValidId(userId);
-      allow delete: if isValidId(userId);
-    }
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) 
+        && incoming().keys().hasAll(['displayName', 'email'])
+        && incoming().displayName is string
+        && incoming().displayName.size() <= 100
+        && incoming().email is string
+        && incoming().email.size() <= 120;
+      allow update: if isOwner(userId)
+        && incoming().displayName is string
+        && incoming().displayName.size() <= 100;
+      allow delete: if isOwner(userId);
 
-    // Transactions Collection
-    match /transactions/{transactionId} {
-      allow read: if true;
-      allow create, update: if isValidId(transactionId);
-      allow delete: if isValidId(transactionId);
-    }
+      // User transactions subcollection
+      match /transactions/{transactionId} {
+        allow get: if isOwner(userId) && isValidId(transactionId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && isValidId(transactionId)
+          && incoming().userId == request.auth.uid
+          && incoming().title is string
+          && incoming().title.size() <= 120
+          && incoming().amount is number
+          && (incoming().type == 'income' || incoming().type == 'expense');
+        allow update: if isOwner(userId)
+          && isValidId(transactionId)
+          && incoming().userId == existing().userId
+          && incoming().amount is number;
+        allow delete: if isOwner(userId) && isValidId(transactionId);
+      }
 
-    // Goals Collection
-    match /goals/{goalId} {
-      allow read: if true;
-      allow create, update, delete: if isValidId(goalId);
-    }
+      // User financial goals subcollection
+      match /goals/{goalId} {
+        allow get: if isOwner(userId) && isValidId(goalId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && isValidId(goalId)
+          && incoming().userId == request.auth.uid
+          && incoming().title is string
+          && incoming().title.size() <= 100
+          && incoming().targetAmount is number
+          && incoming().currentAmount is number;
+        allow update: if isOwner(userId)
+          && isValidId(goalId)
+          && incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(goalId);
+      }
 
-    // Recurring Transactions Collection
-    match /recurring/{recurringId} {
-      allow read: if true;
-      allow create, update, delete: if isValidId(recurringId);
-    }
-
-    // Couple Invites Collection
-    match /invites/{inviteId} {
-      allow read: if true;
-      allow create, update, delete: if isValidId(inviteId);
+      // User budgets subcollection
+      match /budgets/{budgetId} {
+        allow get: if isOwner(userId) && isValidId(budgetId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && isValidId(budgetId)
+          && incoming().userId == request.auth.uid
+          && incoming().category is string
+          && incoming().category.size() <= 50
+          && incoming().limit is number;
+        allow update: if isOwner(userId)
+          && isValidId(budgetId)
+          && incoming().userId == existing().userId
+          && incoming().limit is number;
+        allow delete: if isOwner(userId) && isValidId(budgetId);
+      }
     }
   }
 }
